@@ -13,14 +13,16 @@ import java.util.*;
 public class Snake extends Application {
 
     private MySquare[] tabS;
-    private int positionP;
+    private int positionP,speed,score;
     private List<Integer> positionS;
     private String oriantation;
     private List<Integer> shit;
-    class tt extends TimerTask {
+    private Timer t;
+    public class tt extends TimerTask {
 
         private List<Integer> timeEach,ancianPositionS;
         private int passe;
+
 
         public tt(){
             this.timeEach=new ArrayList<>();
@@ -45,9 +47,10 @@ public class Snake extends Application {
                     else positionS.set(0,teteF);
                     ColoS();
                 }
-
+                //
                 if(positionP==positionS.get(0)){
                     hasetBody();
+                    score++;
                     this.timeEach.add(0);
                     while (positionS.contains(positionP)||shit.contains(positionP))positionP=(int)(Math.random()*25*20);
                     tabS[positionP].setFill(Color.RED);
@@ -63,7 +66,7 @@ public class Snake extends Application {
                 if(shit.contains(passe))tabS[passe].setFill(Color.BLACK);
                 else tabS[passe].setFill(Color.BLUE);
             }catch (ArrayIndexOutOfBoundsException e){
-                System.out.println("You lose!!!");
+                System.out.println("Your score is "+score);
                 for(int i:this.ancianPositionS)tabS[i].setFill(Color.WHITE);
                 this.cancel();
             }
@@ -103,8 +106,10 @@ public class Snake extends Application {
         stage.setScene(scene);
         this.oriantation="";
         this.shit=new ArrayList<>();
-        Timer t=new Timer();
-        t.schedule(new tt(), 0, 200);
+        this.speed=200;
+        this.score=0;
+        t=new Timer();
+        t.schedule(new tt(), 0, this.speed);
         stage.show();
     }
 
@@ -132,6 +137,7 @@ public class Snake extends Application {
             this.positionS.add(positionB);
         }
     }
+
 
 }
 
