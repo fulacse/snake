@@ -19,7 +19,7 @@ public class Snake extends Application {
     private List<Integer> shit;
     class tt extends TimerTask {
 
-        private List<Integer> timeEach;
+        private List<Integer> timeEach,ancianPositionS;
         private int passe;
 
         public tt(){
@@ -31,6 +31,8 @@ public class Snake extends Application {
             try {
                 if(!oriantation.equals("")){
                     this.passe=positionS.get(positionS.size()-1);
+                    this.ancianPositionS=new ArrayList<>();
+                    this.ancianPositionS.addAll(positionS);
                     deplace();
                     int teteF = positionS.get(0);
                     switch (oriantation) {
@@ -43,26 +45,28 @@ public class Snake extends Application {
                     else positionS.set(0,teteF);
                     ColoS();
                 }
+
+                if(positionP==positionS.get(0)){
+                    hasetBody();
+                    this.timeEach.add(0);
+                    while (positionS.contains(positionP)||shit.contains(positionP))positionP=(int)(Math.random()*25*20);
+                    tabS[positionP].setFill(Color.RED);
+                }
+                for(int i=0;i<this.timeEach.size();i++){
+                    this.timeEach.set(i,this.timeEach.get(i)+200);
+                    if(this.timeEach.get(i)>=1000*3){
+                        shit.add(passe);
+                        this.timeEach.remove(i);
+                        i--;
+                    }
+                }
+                if(shit.contains(passe))tabS[passe].setFill(Color.BLACK);
+                else tabS[passe].setFill(Color.BLUE);
             }catch (ArrayIndexOutOfBoundsException e){
                 System.out.println("You lose!!!");
+                for(int i:this.ancianPositionS)tabS[i].setFill(Color.WHITE);
                 this.cancel();
             }
-            if(positionP==positionS.get(0)){
-                hasetBody();
-                this.timeEach.add(0);
-                while (positionS.contains(positionP)||shit.contains(positionP))positionP=(int)(Math.random()*25*20);
-                tabS[positionP].setFill(Color.RED);
-            }
-            for(int i=0;i<this.timeEach.size();i++){
-                this.timeEach.set(i,this.timeEach.get(i)+200);
-                if(this.timeEach.get(i)>=1000*3){
-                    shit.add(passe);
-                    this.timeEach.remove(i);
-                    i--;
-                }
-            }
-            if(shit.contains(passe))tabS[passe].setFill(Color.BLACK);
-            else tabS[passe].setFill(Color.BLUE);
         }
     }
 
@@ -71,7 +75,6 @@ public class Snake extends Application {
         TilePane root=new TilePane();
         root.setMinWidth(21*25);
 
-        this.positionP=(int)(Math.random()*25*20);
         this.positionS= new ArrayList<>();
         this.positionS.add((int)(Math.random()*25*20));
         this.tabS=new MySquare[20*25];
@@ -82,6 +85,8 @@ public class Snake extends Application {
             hasetBody();
         }
         this.ColoS();
+        this.positionP=(int)(Math.random()*25*20);
+        while (this.positionS.contains(this.positionP))this.positionP=(int)(Math.random()*25*20);
         this.tabS[this.positionP].setFill(Color.RED);
         root.getChildren().addAll(this.tabS);
 
@@ -116,10 +121,10 @@ public class Snake extends Application {
     private void hasetBody(){
         int dernier=this.positionS.size() - 1;
         List<Integer> can=new ArrayList<>();
-        if(dernier%25!=24&&this.positionS.get(dernier)+1<500)can.add(this.positionS.get(dernier)+1);
-        if(dernier%25!=0&&this.positionS.get(dernier)-1>=0)can.add(this.positionS.get(dernier)-1);
-        if(dernier+25<20*25&&this.positionS.get(dernier)+25<500)can.add(this.positionS.get(dernier)+25);
-        if(dernier-25>=0&&this.positionS.get(dernier)-25>=0)can.add(this.positionS.get(dernier)-25);
+        if(this.positionS.get(dernier)%25<24)can.add(this.positionS.get(dernier)+1);
+        if(this.positionS.get(dernier)%25>0)can.add(this.positionS.get(dernier)-1);
+        if(this.positionS.get(dernier)+25<500)can.add(this.positionS.get(dernier)+25);
+        if(this.positionS.get(dernier)-25>=0)can.add(this.positionS.get(dernier)-25);
         if(dernier>0)can.remove(this.positionS.get(dernier-1));
         int positionB=(int)(Math.random()*10)*can.size()/10;
         if(can.size()>0){
