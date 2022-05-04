@@ -100,7 +100,7 @@ public class Snake extends Application {
         if(dernier%25!=0&&this.positionS.get(dernier)-1>=0)can.add(this.positionS.get(dernier)-1);
         if(dernier+25<20*25&&this.positionS.get(dernier)+25<500)can.add(this.positionS.get(dernier)+25);
         if(dernier-25>=0&&this.positionS.get(dernier)-25>=0)can.add(this.positionS.get(dernier)-25);
-        if(dernier>0)can.remove(this.positionS.get(dernier-1));
+        if(dernier>0)can.remove((Object)this.positionS.get(dernier-1));
         int positionB=(int)(Math.random()*20)/10;
         positionB=can.get(positionB);
         this.positionS.add(positionB);
