@@ -51,7 +51,7 @@ public class Snake extends Application {
             if(positionP==positionS.get(0)){
                 hasetBody();
                 this.each=true;
-                while (positionS.contains(positionP))positionP=(int)(Math.random()*25*20);
+                while (positionS.contains(positionP)||shit.contains(positionP))positionP=(int)(Math.random()*25*20);
                 tabS[positionP].setFill(Color.RED);
             }
             if(this.each){
