@@ -15,13 +15,22 @@ public class Snake extends Application {
     private int positionP;
     private List<Integer> positionS;
     private String oriantation;
+    private List<Integer> shit;
     class tt extends TimerTask {
+
+        private boolean each;
+        private int timeEach,passe;
+
+        public tt(){
+            this.each=false;
+            this.timeEach=0;
+        }
 
         @Override
         public void run() {
             try {
                 if(!oriantation.equals("")){
-                    int passe=positionS.get(positionS.size()-1);
+                    this.passe=positionS.get(positionS.size()-1);
                     deplace();
                     int teteF = positionS.get(0);
                     switch (oriantation) {
@@ -30,7 +39,7 @@ public class Snake extends Application {
                         case "gauche" -> teteF -= 1;
                         case "droit" -> teteF += 1;
                     }
-                    if(teteF%25==0&&positionS.get(0)%25==24||teteF%25==24&&positionS.get(0)%25==0||positionS.contains(teteF))throw new ArrayIndexOutOfBoundsException();
+                    if(teteF%25==0&&positionS.get(0)%25==24||teteF%25==24&&positionS.get(0)%25==0||positionS.contains(teteF)||shit.contains(teteF))throw new ArrayIndexOutOfBoundsException();
                     else positionS.set(0,teteF);
                     ColoS();
                     tabS[passe].setFill(Color.BLUE);
@@ -41,8 +50,18 @@ public class Snake extends Application {
             }
             if(positionP==positionS.get(0)){
                 hasetBody();
+                this.each=true;
                 while (positionS.contains(positionP))positionP=(int)(Math.random()*25*20);
                 tabS[positionP].setFill(Color.RED);
+            }
+            if(this.each){
+                this.timeEach+=200;
+                if(this.timeEach>=1000*3){
+                    shit.add(passe);
+                    tabS[passe].setFill(Color.BLACK);
+                    this.each=false;
+                    this.timeEach=0;
+                }
             }
         }
     }
@@ -50,7 +69,7 @@ public class Snake extends Application {
     @Override
     public void start(Stage stage){
         TilePane root=new TilePane();
-        root.setMinWidth(25*21);
+        root.setMinWidth(21*25);
 
         this.positionP=(int)(Math.random()*25*20);
         this.positionS= new ArrayList<>();
@@ -78,6 +97,7 @@ public class Snake extends Application {
         stage.setTitle("Sneke");
         stage.setScene(scene);
         this.oriantation="";
+        this.shit=new ArrayList<>();
         Timer t=new Timer();
         t.schedule(new tt(), 0, 200);
         stage.show();
@@ -100,8 +120,8 @@ public class Snake extends Application {
         if(dernier%25!=0&&this.positionS.get(dernier)-1>=0)can.add(this.positionS.get(dernier)-1);
         if(dernier+25<20*25&&this.positionS.get(dernier)+25<500)can.add(this.positionS.get(dernier)+25);
         if(dernier-25>=0&&this.positionS.get(dernier)-25>=0)can.add(this.positionS.get(dernier)-25);
-        if(dernier>0)can.remove((Object)this.positionS.get(dernier-1));
-        int positionB=(int)(Math.random()*20)/10;
+        if(dernier>0)can.remove(this.positionS.get(dernier-1));
+        int positionB=(int)(Math.random()*10)*can.size()/10;
         positionB=can.get(positionB);
         this.positionS.add(positionB);
     }
